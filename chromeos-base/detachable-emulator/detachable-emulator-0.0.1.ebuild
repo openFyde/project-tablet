@@ -20,25 +20,32 @@ RDEPEND=""
 DEPEND="${RDEPEND}"
 MODULE_NAMES="fyde-vdtb(kernel/drivers/input)"
 
-pre_pkg_setup() {
+pkg_setup() {
   export KV_OUT_DIR=${ROOT}usr/src/linux
+  export KBUILD_OUTPUT=${ROOT}usr/src/linux
 #  linux-info_get_any_version
   use kernel-4_14 && export KERNEL_DIR="/mnt/host/source/src/third_party/kernel/v4.14"
   use kernel-5_4 && export KERNEL_DIR="/mnt/host/source/src/third_party/kernel/v5.4"
   use kernel-4_19 && export KERNEL_DIR="/mnt/host/source/src/third_party/kernel/v4.19"
   linux-mod_pkg_setup
-  einfo 
   if [ ! -r $KV_OUT_DIR/source ]; then
     ln -f -s $KERNEL_DIR $KV_OUT_DIR/source
   fi
   if [ ! -r ${ROOT}/lib/modules/${KV_FULL}/source ]; then
     ln -f -s $KERNEL_DIR ${ROOT}/lib/modules/${KV_FULL}/source
   fi
+  einfo "Edit $KV_OUT_DIR/Makefile"
   sed -i -e "s|^MAKEARGS := -C.*|MAKEARGS := -C ${KERNEL_DIR}|" $KV_OUT_DIR/Makefile
+  sed -i -e "s|^include.*$|include ${KERNEL_DIR}/Makefile|" $KV_OUT_DIR/Makefile
+  #BUILD_PARAMS="-C ${KERNEL_DIR} -I${KBUILD_OUTPUT} O=${KBUILD_OUTPUT} M=${S}"
+  einfo "Edit $KERNEL_DIR/Makefile"
+  sed -i -e "s|^HOST_LIBELF_LIBS = \$(shell pkg-config.*$|HOST_LIBELF_LIBS = \$(shell \"pkg-config libelf --libs 2>/dev/null \"\|\| echo -lelf)|" $KERNEL_DIR/Makefile
+  cros_use_gcc
 }
 
 src_compile() {
   unset ARCH
+  tc-export PKG_CONFIG
   linux-mod_src_compile    
 }
 
