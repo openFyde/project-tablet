@@ -38,8 +38,8 @@ pkg_setup() {
 #  ln -f -s $KERNEL_DIR ${ROOT}/usr/src/linux
   linux-mod_pkg_setup
   einfo "Edit $KV_OUT_DIR/Makefile"
-#  sed -i -e "s|^MAKEARGS := -C.*|MAKEARGS := -C ${KERNEL_DIR}|" $KV_OUT_DIR/Makefile
-#  sed -i -e "s|^include.*$|include ${KERNEL_DIR}/Makefile|" $KV_OUT_DIR/Makefile
+  sed -i -e "s|^MAKEARGS := -C.*|MAKEARGS := -C ${KERNEL_DIR}|" $KV_OUT_DIR/Makefile
+  sed -i -e "s|^include.*$|include ${KERNEL_DIR}/Makefile|" $KV_OUT_DIR/Makefile
   #BUILD_PARAMS="-C ${KERNEL_DIR} -I${KBUILD_OUTPUT} O=${KBUILD_OUTPUT} M=${S}"
   einfo "Edit $KERNEL_DIR/Makefile"
 #  sed -i -e "s|^HOST_LIBELF_LIBS = \$(shell pkg-config.*$|HOST_LIBELF_LIBS = \$(shell \"pkg-config libelf --libs 2>/dev/null \"\|\| echo -lelf)|" $KERNEL_DIR/Makefile
