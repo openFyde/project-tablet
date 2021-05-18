@@ -13,7 +13,7 @@ HOMEPAGE="http://fydeos.com"
 LICENSE="BSD-Google"
 SLOT="0"
 KEYWORDS="*"
-IUSE="kernel-4_14 kernel-5_4 kernel-4_19 kernel-surface-4_19"
+IUSE="kernel-4_14 kernel-5_4 kernel-5_10 kernel-4_19 kernel-surface-4_19 clang"
 
 RDEPEND=""
 
@@ -26,6 +26,7 @@ pkg_setup() {
 #  linux-info_get_any_version
   use kernel-4_14 && export KERNEL_DIR="/mnt/host/source/src/third_party/kernel/v4.14"
   use kernel-5_4 && export KERNEL_DIR="/mnt/host/source/src/third_party/kernel/v5.4"
+  use kernel-5_10 && export KERNEL_DIR="/mnt/host/source/src/third_party/kernel/v5.10"
   use kernel-4_19 && export KERNEL_DIR="/mnt/host/source/src/third_party/kernel/v4.19"
   use kernel-surface-4_19 && KERNEL_DIR="/mnt/host/source/src/third_party/kernel/v4.19-surface"
   if [ -r $KV_OUT_DIR/source ]; then
@@ -42,15 +43,20 @@ pkg_setup() {
   sed -i -e "s|^include.*$|include ${KERNEL_DIR}/Makefile|" $KV_OUT_DIR/Makefile
   #BUILD_PARAMS="-C ${KERNEL_DIR} -I${KBUILD_OUTPUT} O=${KBUILD_OUTPUT} M=${S}"
   einfo "Edit $KERNEL_DIR/Makefile"
-  if use kernel-4_19; then
-    sed -i -e "s|^HOST_LIBELF_LIBS = \$(shell pkg-config.*$|HOST_LIBELF_LIBS = \$(shell \"pkg-config libelf --libs 2>/dev/null \"\|\| echo -lelf)|" $KERNEL_DIR/Makefile
+  sed -i -e "s|^HOST_LIBELF_LIBS = \$(shell pkg-config.*$|HOST_LIBELF_LIBS = \$(shell \"pkg-config libelf --libs 2>/dev/null \"\|\| echo -lelf)|" $KERNEL_DIR/Makefile
+  if use clang; then
+    export LLVM=llvm
+  else
+    cros_use_gcc
   fi
-  cros_use_gcc
 }
 
 src_compile() {
   unset ARCH
   tc-export PKG_CONFIG
+  if use clang; then
+    export PATH=/usr/bin:$PATH
+  fi
   linux-mod_src_compile    
 }
 
