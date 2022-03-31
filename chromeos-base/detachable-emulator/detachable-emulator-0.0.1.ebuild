@@ -33,6 +33,14 @@ pkg_setup() {
     rm $KV_OUT_DIR/source
     ln -f -s $KERNEL_DIR $KV_OUT_DIR/source
   fi
+  if use kernel-4_19; then
+    # for surface-pro3, 4, 5, 6. v14.1 release
+    git -C "$KERNEL_DIR" checkout f85a69d601ba9f66b60eb13d377e1b193f2c08a7 || die "Unable to checkout"
+  elif use kernel-5_10; then
+    # for surface-pro7. v14.1 release
+    git -C "$KERNEL_DIR" checkout bca20254cbdceec0704062c4117fbf415db42cf9 || die "Unable to checkout"
+  fi
+
 #  if [ ! -r ${ROOT}/lib/modules/${KV_FULL}/source ]; then
 #    ln -f -s $KERNEL_DIR ${ROOT}/lib/modules/${KV_FULL}/source
 #  fi
