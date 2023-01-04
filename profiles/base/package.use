@@ -1,0 +1,10 @@
+chromeos-base/chromeos-chrome -iioservice
+chromeos-base/arc-common-scripts iioservice
+chromeos-base/arc-setup iioservice
+chromeos-base/mems_setup iioservice
+chromeos-base/power_manager iioservice
+chromeos-base/tast-use-flags iioservice
+chromeos-base/vm_host_tools iioservice
+net-libs/libiio iioservice
+virtual/target-chromium-os iioservice
+virtual/target-chromium-os-test iioservice
