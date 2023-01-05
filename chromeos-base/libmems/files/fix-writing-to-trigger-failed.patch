@@ -1,15 +1,15 @@
-diff --git a/libmems/iio_device_trigger_impl.cc b/libmems/iio_device_trigger_impl.cc
+diff --git a/iio_device_trigger_impl.cc b/iio_device_trigger_impl.cc
 index c02f1e3b43..bf77966b32 100644
---- a/libmems/iio_device_trigger_impl.cc
-+++ b/libmems/iio_device_trigger_impl.cc
+--- a/iio_device_trigger_impl.cc
++++ b/iio_device_trigger_impl.cc
 @@ -17,6 +17,7 @@
  namespace {
- 
+
  constexpr char kAddTrigger[] = "add_trigger";
 +constexpr char kTrigger[] = "trigger_now";
- 
+
  }  // namespace
- 
+
 @@ -115,7 +116,7 @@ bool IioDeviceTriggerImpl::WriteNumberAttribute(const std::string& name,
                                                  int64_t value) {
    int id = GetId();
@@ -18,7 +18,7 @@ index c02f1e3b43..bf77966b32 100644
 +      (id != -1 && name.compare(kSamplingFrequencyAttr) != 0 && name.compare(kTrigger) != 0)) {
      return false;
    }
- 
+
 @@ -132,7 +133,7 @@ bool IioDeviceTriggerImpl::WriteDoubleAttribute(const std::string& name,
                                                  double value) {
    int id = GetId();
@@ -27,4 +27,4 @@ index c02f1e3b43..bf77966b32 100644
 +      (id != -1 && name.compare(kSamplingFrequencyAttr) != 0 && name.compare(kTrigger) != 0)) {
      return false;
    }
- 
+

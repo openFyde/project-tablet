@@ -64,4 +64,8 @@ platform_pkg_test() {
 	platform test_all
 }
 
-PATCHES=( "${FILESDIR}"/add-trigger-to-accelerometor.patch )
+src_prepare() {
+  eapply -p3 "${FILESDIR}"/add-trigger-to-accelerometor.patch
+  default
+}
+
