@@ -3,8 +3,8 @@
 
 EAPI=7
 
-CROS_WORKON_COMMIT=("95cba42c3e39999a02c3534e6924cdd5b8cdc775" "5e9a89d06c41edf5cf43da8acf5f26ed104887e6")
-CROS_WORKON_TREE=("f91b6afd5f2ae04ee9a2c19109a3a4a36f7659e6" "77cc0ad6e3c6963ea161d98f76bd163ea1274596" "284f3602420093498b1e01984a0db1190bd55812" "79cdd007ff69259efcaad08803ef2d1498374ec4" "eb510d666a66e6125e281499b649651b849a25f7" "04e719781ceebd62f2f0c6fcc76f46a07944b9b4" "693bb2d63562c6eff050d04f75aab1e9251e6548")
+CROS_WORKON_COMMIT=("635ba60101db69c49eee7ba1d90c812f2a7eb858" "5e9a89d06c41edf5cf43da8acf5f26ed104887e6")
+CROS_WORKON_TREE=("f91b6afd5f2ae04ee9a2c19109a3a4a36f7659e6" "143fcc69d4ec2e1cf6b955e349f156fb76cdc3e9" "7311c12446fcf9ac0faaa93a11d6cf0f33a2c95f" "c5a3f846afdfb5f37be5520c63a756807a6b31c4" "71b6668ea23fdcf5ce2c3889e3a3cc703e8cd6df" "66d9ece0c55ff21826b4962ffd402f0927467387" "693bb2d63562c6eff050d04f75aab1e9251e6548")
 inherit cros-constants
 
 CROS_WORKON_PROJECT=(
@@ -42,7 +42,6 @@ KEYWORDS="*"
 IUSE="+seccomp"
 
 RDEPEND="
-	!chromeos-base/chromeos-accelerometer-init
 	>=chromeos-base/metrics-0.0.1-r3152:=
 	chromeos-base/libiioservice_ipc:=
 	chromeos-base/libmems:=

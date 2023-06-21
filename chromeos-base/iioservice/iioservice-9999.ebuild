@@ -40,7 +40,6 @@ KEYWORDS="~*"
 IUSE="+seccomp"
 
 RDEPEND="
-	!chromeos-base/chromeos-accelerometer-init
 	>=chromeos-base/metrics-0.0.1-r3152:=
 	chromeos-base/libiioservice_ipc:=
 	chromeos-base/libmems:=
