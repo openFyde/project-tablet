@@ -21,10 +21,12 @@ KEYWORDS="~*"
 IUSE=""
 
 COMMON_DEPEND="
-	net-libs/libiio:="
+	chromeos-base/system_api:=
+	net-libs/libiio:=
+	virtual/libudev:=
+"
 RDEPEND="${COMMON_DEPEND}"
-DEPEND="${COMMON_DEPEND}
-	chromeos-base/system_api:="
+DEPEND="${COMMON_DEPEND}"
 
 platform_pkg_test() {
 	platform test_all

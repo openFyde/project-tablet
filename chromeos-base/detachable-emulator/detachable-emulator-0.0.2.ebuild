@@ -1,7 +1,7 @@
 # Copyright (c) 2018 The Fyde OS Authors. All rights reserved.
 # Distributed under the terms of the BSD
 
-EAPI="5"
+EAPI="7"
 
 DESCRIPTION="A script to switch tablet mode based on Detachable Device Emulator Kernel Driver"
 HOMEPAGE="http://fydeos.com"

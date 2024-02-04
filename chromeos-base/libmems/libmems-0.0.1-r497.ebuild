@@ -3,8 +3,8 @@
 
 EAPI=7
 
-CROS_WORKON_COMMIT="759635cf334285c52b12a0ebd304988c4bb1329f"
-CROS_WORKON_TREE=("c5a3f846afdfb5f37be5520c63a756807a6b31c4" "7311c12446fcf9ac0faaa93a11d6cf0f33a2c95f" "f91b6afd5f2ae04ee9a2c19109a3a4a36f7659e6")
+CROS_WORKON_COMMIT="04097b9df3be67662e26f4a7452ddbf989a7158b"
+CROS_WORKON_TREE=("8d6f8fdce76674dc4f63f7b19f50a8b8b141218f" "51a1c425e169ed912ef77b70361becbd07995916" "f91b6afd5f2ae04ee9a2c19109a3a4a36f7659e6")
 CROS_WORKON_INCREMENTAL_BUILD="1"
 CROS_WORKON_LOCALNAME="platform2"
 CROS_WORKON_PROJECT="chromiumos/platform2"
@@ -23,13 +23,15 @@ KEYWORDS="*"
 IUSE=""
 
 COMMON_DEPEND="
-	net-libs/libiio:="
+	chromeos-base/system_api:=
+	net-libs/libiio:=
+	virtual/libudev:=
+"
 RDEPEND="${COMMON_DEPEND}"
-DEPEND="${COMMON_DEPEND}
-	chromeos-base/system_api:="
+DEPEND="${COMMON_DEPEND}"
 
 platform_pkg_test() {
 	platform test_all
 }
 
-PATCHES=( ${FILESDIR}/fix-writing-to-trigger-failed.patch )
+PATCHES=( "${FILESDIR}/fix_location.patch" )
