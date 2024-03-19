@@ -53,4 +53,7 @@ platform_pkg_test() {
 	platform test_all
 }
 
-PATCHES=( "${FILESDIR}/add_fydetab_support.patch" )
+PATCHES=(
+  "${FILESDIR}/add_fydetab_support.patch"
+  "${FILESDIR}/add_cros_compat_accel_support.patch"
+  )
