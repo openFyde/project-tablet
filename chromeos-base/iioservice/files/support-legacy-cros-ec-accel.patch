@@ -1,0 +1,14 @@
+diff --git a/samples_handler.cc b/samples_handler.cc
+index f1862a24cc..c6dbbed572 100644
+--- a/samples_handler.cc
++++ b/samples_handler.cc
+@@ -97,7 +97,8 @@ SamplesHandler::ScopedSamplesHandler SamplesHandler::Create(
+     LOGF(ERROR) << "Device " << iio_device->GetId()
+                 << " has neither fifo, nor trigger, nor hrtimer. Cannot read "
+                    "samples from it.";
+-    return handler;
++    if (std::strcmp(iio_device->GetName(),"cros-ec-accel"))
++      return handler;
+   }
+
+   if (!DisableBufferAndEnableChannels(iio_device))

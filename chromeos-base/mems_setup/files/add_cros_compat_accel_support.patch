@@ -20,7 +20,7 @@ Index: mems_setup/configuration.cc
  
    // If the buffer is enabled, which means mems_setup has already been used on
    // this sensor and iioservice is reading the samples from it, skip setting the
-@@ -514,6 +517,38 @@ bool Configuration::ConfigGyro() {
+@@ -514,15 +517,47 @@ bool Configuration::ConfigGyro() {
    return true;
  }
  
@@ -46,6 +46,10 @@ Index: mems_setup/configuration.cc
 +      LOG(ERROR) << "cannot find cros-compat-accel's trigger";
 +      return false;
 +    }
++    if (!sensor_->SetTrigger(triggers[0])) {
++       LOG(ERROR) << "cannot set sensor's trigger to " << trigger_name;
++       return false;
++    }
 +    auto trigger = triggers.front();
 +    base::FilePath sys_trg_path =
 +        trigger->GetPath().Append(libmems::kSamplingFrequencyAttr);
@@ -59,7 +63,16 @@ Index: mems_setup/configuration.cc
  bool Configuration::ConfigAccelerometer() {
    CopyImuCalibationFromVpd(kAccelMaxVpdCalibration);
  
-@@ -549,6 +584,7 @@ bool Configuration::ConfigAccelerometer(
+-  if (!AddSysfsTrigger(kAccelSysfsTriggerId))
+-    return false;
+-
+   if (!EnableKeyboardAngle())
+     return false;
+-
+   /*
+    * Gather gyroscope. If one of them is on the same plane, set
+    * accelerometer range to 4g to meet Android 10 CCD Requirements
+@@ -549,10 +584,14 @@ bool Configuration::ConfigAccelerometer(
          range = 4;
        else
          range = 2;
@@ -67,6 +80,13 @@ Index: mems_setup/configuration.cc
      }
  
      if (!sensor_->WriteNumberAttribute(kCalibrationScale, range))
+       return false;
++  } else {
++    if (!AddSysfsTrigger(kAccelSysfsTriggerId))
++      return false;
+   }
+ 
+   LOG(INFO) << "accelerometer configuration complete";
 Index: mems_setup/configuration.h
 ===================================================================
 --- mems_setup.orig/configuration.h
