@@ -20,7 +20,7 @@ Index: mems_setup/configuration.cc
  
    // If the buffer is enabled, which means mems_setup has already been used on
    // this sensor and iioservice is reading the samples from it, skip setting the
-@@ -514,15 +517,47 @@ bool Configuration::ConfigGyro() {
+@@ -514,15 +517,50 @@ bool Configuration::ConfigGyro() {
    return true;
  }
  
@@ -53,6 +53,9 @@ Index: mems_setup/configuration.cc
 +    auto trigger = triggers.front();
 +    base::FilePath sys_trg_path =
 +        trigger->GetPath().Append(libmems::kSamplingFrequencyAttr);
++    if(!triggers[0]->WriteDoubleAttribute(libmems::kSamplingFrequencyAttr,
++                                             10.0))
++      LOG(ERROR) << "failed to set frequency to 10";
 +    SetReadPermissionAndOwnership(sys_trg_path);
 +    SetWritePermissionAndOwnership(sys_trg_path);
 +    LOG(INFO) << "config hrtime for accel.";
@@ -72,7 +75,7 @@ Index: mems_setup/configuration.cc
    /*
     * Gather gyroscope. If one of them is on the same plane, set
     * accelerometer range to 4g to meet Android 10 CCD Requirements
-@@ -549,10 +584,14 @@ bool Configuration::ConfigAccelerometer(
+@@ -549,10 +587,14 @@ bool Configuration::ConfigAccelerometer(
          range = 4;
        else
          range = 2;
