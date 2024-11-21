@@ -20,7 +20,7 @@ Index: mems_setup/configuration.cc
  
    // If the buffer is enabled, which means mems_setup has already been used on
    // this sensor and iioservice is reading the samples from it, skip setting the
-@@ -514,15 +517,50 @@ bool Configuration::ConfigGyro() {
+@@ -514,15 +517,53 @@ bool Configuration::ConfigGyro() {
    return true;
  }
  
@@ -58,6 +58,9 @@ Index: mems_setup/configuration.cc
 +      LOG(ERROR) << "failed to set frequency to 10";
 +    SetReadPermissionAndOwnership(sys_trg_path);
 +    SetWritePermissionAndOwnership(sys_trg_path);
++    sensor_->WriteNumberAttribute("buffer0/in_accel_x_en", 1);
++    sensor_->WriteNumberAttribute("buffer0/in_accel_y_en", 1);
++    sensor_->WriteNumberAttribute("buffer0/in_accel_z_en", 1);
 +    LOG(INFO) << "config hrtime for accel.";
 +  }
 +  return true;
@@ -75,7 +78,7 @@ Index: mems_setup/configuration.cc
    /*
     * Gather gyroscope. If one of them is on the same plane, set
     * accelerometer range to 4g to meet Android 10 CCD Requirements
-@@ -549,10 +587,14 @@ bool Configuration::ConfigAccelerometer(
+@@ -549,10 +590,14 @@ bool Configuration::ConfigAccelerometer(
          range = 4;
        else
          range = 2;
@@ -90,6 +93,25 @@ Index: mems_setup/configuration.cc
    }
  
    LOG(INFO) << "accelerometer configuration complete";
+@@ -560,7 +605,8 @@ bool Configuration::ConfigAccelerometer(
+ }
+ 
+ bool Configuration::ConfigIlluminance() {
+-  if (strcmp(sensor_->GetName(), "acpi-als") == 0) {
++  if (strcmp(sensor_->GetName(), "acpi-als") == 0 ||
++      strcmp(sensor_->GetName(), "cros-ec-light") == 0) {
+     std::string trigger_name =
+         base::StringPrintf(libmems::kHrtimerNameFormatString, sensor_->GetId());
+     if (context_->GetTriggersByName(trigger_name).empty()) {
+@@ -595,6 +641,8 @@ bool Configuration::ConfigIlluminance()
+         trigger->GetPath().Append(libmems::kSamplingFrequencyAttr);
+     SetReadPermissionAndOwnership(sys_trg_path);
+     SetWritePermissionAndOwnership(sys_trg_path);
++    sensor_->WriteNumberAttribute("buffer0/in_illuminance_en", 1);
++    sensor_->WriteNumberAttribute("buffer0/in_intensity_both_en", 1);
+   }
+ 
+   if (!CopyLightCalibrationFromVpd())
 Index: mems_setup/configuration.h
 ===================================================================
 --- mems_setup.orig/configuration.h
