@@ -1,11 +1,14 @@
-diff --git a/samples_handler.cc b/samples_handler.cc
-index dd739193d1..391f0ba25b 100644
---- a/samples_handler.cc
-+++ b/samples_handler.cc
-@@ -97,7 +97,14 @@ SamplesHandler::ScopedSamplesHandler SamplesHandler::Create(
-     LOGF(ERROR) << "Device " << iio_device->GetId()
-                 << " has neither fifo, nor trigger, nor hrtimer. Cannot read "
-                    "samples from it.";
+Index: daemon/samples_handler.cc
+===================================================================
+--- daemon.orig/samples_handler.cc
++++ daemon/samples_handler.cc
+@@ -97,10 +97,14 @@ SamplesHandler::ScopedSamplesHandler Sam
+   auto* iio_device = device_data->iio_device;
+   if (!iio_device->HasFifo() && !iio_device->GetTrigger() &&
+       !iio_device->GetHrtimer()) {
+-    LOGF(ERROR) << "Device " << iio_device->GetId()
+-                << " has neither fifo, nor trigger, nor hrtimer. Cannot read "
+-                   "samples from it.";
 -    return handler;
 +    if (std::strcmp(iio_device->GetName(),"cros-ec-accel")) {
 +      LOGF(ERROR) << "Device " << iio_device->GetId()
@@ -16,27 +19,27 @@ index dd739193d1..391f0ba25b 100644
 +    LOGF(INFO) << "Device " << iio_device->GetName()
 +      << " is set to hrtime mode.";
    }
-
-   if (!DisableBufferAndEnableChannels(iio_device))
-@@ -442,7 +449,7 @@ void SamplesHandler::UpdateFrequencyOnThread(
+ 
+   if (!DisableBufferAndEnableChannels(iio_device)) {
+@@ -462,7 +466,7 @@ void SamplesHandler::UpdateFrequencyOnTh
    DCHECK_EQ(client_data->device_data->iio_device, iio_device_);
-
+ 
    frequency = FixFrequency(frequency);
 -
 +  LOGF(INFO) << "update frequency:" << frequency;
    double orig_freq = client_data->frequency;
    client_data->frequency = frequency;
    ipc_task_runner_->PostTask(FROM_HERE,
-diff --git a/samples_handler_base.cc b/samples_handler_base.cc
-index 5a844b016d..1a084a642d 100644
---- a/samples_handler_base.cc
-+++ b/samples_handler_base.cc
-@@ -204,6 +204,8 @@ void SamplesHandlerBase::RemoveActiveClientOnThread(ClientData* client_data,
+Index: daemon/samples_handler_base.cc
+===================================================================
+--- daemon.orig/samples_handler_base.cc
++++ daemon/samples_handler_base.cc
+@@ -207,6 +207,8 @@ void SamplesHandlerBase::RemoveActiveCli
  }
-
+ 
  double SamplesHandlerBase::FixFrequency(double frequency) {
 +  if (frequency < libmems::kFrequencyEpsilon)
 +    return 10.0;
    return frequency;
  }
-
+ 
