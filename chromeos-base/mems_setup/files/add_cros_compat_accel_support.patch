@@ -2,7 +2,7 @@ Index: mems_setup/configuration.cc
 ===================================================================
 --- mems_setup.orig/configuration.cc
 +++ mems_setup/configuration.cc
-@@ -65,7 +65,7 @@ constexpr char kSysfsTriggerPrefix[] = "
+@@ -64,7 +64,7 @@ constexpr char kSysfsTriggerPrefix[] = "
  
  constexpr int kGyroMaxVpdCalibration = 16384;  // 16dps
  constexpr int kAccelMaxVpdCalibration = 256;   // .250g
@@ -11,7 +11,7 @@ Index: mems_setup/configuration.cc
  
  constexpr int kSysfsTriggerId = -1;
  
-@@ -125,10 +125,12 @@ bool Configuration::Configure() {
+@@ -124,10 +124,12 @@ bool Configuration::Configure() {
    }
  
    if (!ConfigureOnKind()) {
@@ -24,7 +24,7 @@ Index: mems_setup/configuration.cc
      return false;
    }
  
-@@ -498,13 +500,56 @@ bool Configuration::ConfigGyro() {
+@@ -496,6 +498,48 @@ bool Configuration::ConfigGyro() {
    return true;
  }
  
@@ -71,8 +71,13 @@ Index: mems_setup/configuration.cc
 +}
 +
  bool Configuration::ConfigAccelerometer() {
-   CopyImuCalibationFromVpd(kAccelMaxVpdCalibration);
- 
+   auto* cros_config = delegate_->GetCrosConfig();
+   std::string max_calibration_str;
+@@ -511,11 +555,11 @@ bool Configuration::ConfigAccelerometer(
+     max_calibration_value = kAccelMaxVpdCalibration;
+   }
+   CopyImuCalibationFromVpd(max_calibration_value);
+-
 +#if 0
    if (!AddSysfsTrigger(kAccelSysfsTriggerId)) {
      return false;
@@ -82,7 +87,7 @@ Index: mems_setup/configuration.cc
    if (!EnableKeyboardAngle()) {
      return false;
    }
-@@ -537,11 +582,12 @@ bool Configuration::ConfigAccelerometer(
+@@ -548,11 +592,12 @@ bool Configuration::ConfigAccelerometer(
        } else {
          range = 2;
        }
@@ -96,7 +101,7 @@ Index: mems_setup/configuration.cc
    }
  
    LOG(INFO) << "accelerometer configuration complete";
-@@ -549,7 +595,8 @@ bool Configuration::ConfigAccelerometer(
+@@ -560,7 +605,8 @@ bool Configuration::ConfigAccelerometer(
  }
  
  bool Configuration::ConfigIlluminance() {
@@ -106,7 +111,7 @@ Index: mems_setup/configuration.cc
      std::string trigger_name =
          base::StringPrintf(libmems::kHrtimerNameFormatString, sensor_->GetId());
      if (context_->GetTriggersByName(trigger_name).empty()) {
-@@ -584,6 +631,8 @@ bool Configuration::ConfigIlluminance()
+@@ -595,6 +641,8 @@ bool Configuration::ConfigIlluminance()
          trigger->GetPath().Append(libmems::kSamplingFrequencyAttr);
      SetReadPermissionAndOwnership(sys_trg_path);
      SetWritePermissionAndOwnership(sys_trg_path);
